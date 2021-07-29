@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/address-finder/static/css/main.a617e044.chunk.css",
+    "main.js": "/address-finder/static/js/main.e245322d.chunk.js",
+    "main.js.map": "/address-finder/static/js/main.e245322d.chunk.js.map",
+    "runtime-main.js": "/address-finder/static/js/runtime-main.5f970939.js",
+    "runtime-main.js.map": "/address-finder/static/js/runtime-main.5f970939.js.map",
+    "static/js/2.a19ad4d6.chunk.js": "/address-finder/static/js/2.a19ad4d6.chunk.js",
+    "static/js/2.a19ad4d6.chunk.js.map": "/address-finder/static/js/2.a19ad4d6.chunk.js.map",
+    "static/js/3.43c42e8c.chunk.js": "/address-finder/static/js/3.43c42e8c.chunk.js",
+    "static/js/3.43c42e8c.chunk.js.map": "/address-finder/static/js/3.43c42e8c.chunk.js.map",
+    "index.html": "/address-finder/index.html",
+    "static/css/main.a617e044.chunk.css.map": "/address-finder/static/css/main.a617e044.chunk.css.map",
+    "static/js/2.a19ad4d6.chunk.js.LICENSE.txt": "/address-finder/static/js/2.a19ad4d6.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/address-finder/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5f970939.js",
+    "static/js/2.a19ad4d6.chunk.js",
+    "static/css/main.a617e044.chunk.css",
+    "static/js/main.e245322d.chunk.js"
+  ]
+}
