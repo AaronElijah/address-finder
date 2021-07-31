@@ -1,43 +1,41 @@
 .App {
   text-align: center;
   height: 100%;
-}
-
-.App-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   color: white;
-  width: 100%;
-  height: 150px;
-  background-color: inherit;
-  margin-top: 10px;
-}
-
-.App-header .title {
-  font-size: 30px;
-}
-
-.App-header .subtitle {
-  font-size: 15px;
-  font-weight: lighter;
-  margin-top: 0px;
-}
-
-.App-header .divider {
-  opacity: 0.5;
-  border-radius: 25px;
-  background: linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
-  height: 3px;
-  width: 500px;
-}
-
-.App-header .divider::before {
-  content: "\00a0";
 }
 
 .App-main {
   background-color: inherit;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+}
+
+.address-form-container {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.address-form-container .sub-heading {
+  width: 100%;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.address-form-container #duration-answers {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.address-form-container #postcode-search {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
