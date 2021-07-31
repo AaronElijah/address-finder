@@ -1,8 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import App from "./App";
 
-test("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+afterEach(cleanup);
+
+test("check header text renders with correct text", () => {
+  const dom = render(<App />);
+  const headerTitle = dom.container.querySelector(".App-header .title");
+  expect(headerTitle?.textContent).toEqual("Address Search");
+  const headerSubtitle = dom.container.querySelector(".App-header .subtitle");
+  expect(headerSubtitle?.textContent).toEqual("Please enter your address");
 });
