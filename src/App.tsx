@@ -1,5 +1,6 @@
 import "./App.css";
 import { Header } from "./components/Header/Header";
+import { Dropdown } from "./components/Dropdown/Dropdown";
 
 function App() {
   return (
@@ -11,8 +12,12 @@ function App() {
             {"How long have you lived at your current address?"}
           </div>
           <div className="duration-answers">
-            <span>{"First"}</span>
-            <span>{"Second"}</span>
+            <span>
+              <Dropdown />
+            </span>
+            <span>
+              <Dropdown />
+            </span>
           </div>
         </div>
       </div>
