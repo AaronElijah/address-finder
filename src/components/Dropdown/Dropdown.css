@@ -2,19 +2,21 @@
   box-sizing: border-box;
   border: 1px solid white;
   width: 245px;
-  /* display: flex; */
+  display: flex;
   align-items: center;
-  /* justify-content: center; */
+  align-content: center;
+  vertical-align: middle;
+  cursor: pointer;
+  height: 30px;
 }
-
 .dropdown .label {
   height: 20px;
 }
 
 .dropdown .toggle-arrow {
   display: block;
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   background-image: url(../../assets/chevron-down.png);
   background-repeat: no-repeat;
   background-position: center;
