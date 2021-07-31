@@ -1,7 +1,7 @@
 import "./App.css";
 import { Header } from "./components/Header/Header";
 import { Dropdown } from "./components/Dropdown/Dropdown";
-import { InputSearch } from "./components/InputSearch/InputSearch";
+import { InputSearch } from "./containers/InputSearch/InputSearch";
 
 const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   value: i,
@@ -32,7 +32,7 @@ function App() {
           </div>
           <div className="sub-heading">{"Postcode search"}</div>
           <div id="postcode-search">
-            <InputSearch />
+            <InputSearch placeholder={"Enter postcode"} />
           </div>
         </div>
       </div>
