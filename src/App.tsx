@@ -1,14 +1,21 @@
 import "./App.css";
+import { Header } from "./components/Header/Header";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1 className="title">Address Search</h1>
-        <h3 className="subtitle">Please enter your address</h3>
-        <div className="divider"></div>
-      </header>
-      <div className="App-main">{"Hello"}</div>
+      <Header title="Address Search" subtitle="Please enter your address" />
+      <div className="App-main">
+        <div className="address-form-container">
+          <div className="sub-heading">
+            {"How long have you lived at your current address?"}
+          </div>
+          <div className="duration-answers">
+            <span>{"First"}</span>
+            <span>{"Second"}</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
