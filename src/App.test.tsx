@@ -1,7 +1,5 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import App from "./App";
-
-afterEach(cleanup);
 
 test("check header text renders with correct text", () => {
   const dom = render(<App />);
@@ -19,4 +17,42 @@ test("check main body renders with correct text", () => {
   expect(addressDurationQuestion?.textContent).toEqual(
     "How long have you lived at your current address?"
   );
+});
+
+test("check can select year in address duration dropdowns", () => {
+  const dom = render(<App />);
+  const yearSelect = dom.container.querySelector(
+    "#select-address-years .dropdown"
+  ) as HTMLSelectElement;
+  const options = yearSelect.getElementsByTagName("option");
+
+  expect(yearSelect.value).toEqual("Select years");
+  fireEvent.change(yearSelect, { target: { value: 5 } }); // Select last option
+  for (let i = 0; i < options.length; i++) {
+    if (i === options.length - 1) {
+      expect(options[i].selected).toBeTruthy();
+    } else {
+      expect(options[i].selected).toBeFalsy();
+    }
+  }
+  expect(yearSelect.value).toEqual("5");
+});
+
+test("Check can select month in address duration dropdowns", () => {
+  const dom = render(<App />);
+  const monthSelect = dom.container.querySelector(
+    "#select-address-months .dropdown"
+  ) as HTMLSelectElement;
+  const options = monthSelect.getElementsByTagName("option");
+
+  expect(monthSelect.value).toEqual("Select months");
+  fireEvent.change(monthSelect, { target: { value: 11 } }); // Select last option
+  for (let i = 0; i < options.length; i++) {
+    if (i === options.length - 1) {
+      expect(options[i].selected).toBeTruthy();
+    } else {
+      expect(options[i].selected).toBeFalsy();
+    }
+  }
+  expect(monthSelect.value).toEqual("11");
 });

@@ -23,11 +23,19 @@
 .address-form-container .sub-heading {
   width: 100%;
   text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.address-form-container .duration-answers {
+.address-form-container #duration-answers {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.address-form-container #postcode-search {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
