@@ -1,29 +1,38 @@
 import React from "react";
-import "./InputSearch.css";
+import { InputSearchView } from "./InputSearchView";
 
 interface InputSearchProps {
+  value: string | null;
   placeholder: string;
-  inputValue: string;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearch: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled: boolean;
+  handleChange: (value: string) => void;
+  handleSearch: () => void;
 }
 
 export const InputSearch = ({
+  value,
   placeholder,
-  inputValue,
-  onInputChange,
-  onSearch,
+  disabled,
+  handleChange,
+  handleSearch,
 }: InputSearchProps) => {
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.value.length <= 8) {
+      handleChange(e.target.value);
+    }
+  };
+  const onSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleSearch();
+  };
   return (
-    <form className="form">
-      <input
-        type="text"
-        placeholder={placeholder}
-        className="input"
-        value={inputValue}
-        onChange={onInputChange}
-      ></input>
-      <button className="search-glass" onClick={onSearch}></button>
-    </form>
+    <InputSearchView
+      placeholder={placeholder}
+      inputValue={value}
+      onInputChange={onInputChange}
+      onSearch={onSearch}
+      disabled={disabled}
+    />
   );
 };

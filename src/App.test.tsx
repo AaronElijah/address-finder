@@ -58,8 +58,30 @@ test("Check can select month in address duration dropdowns", () => {
   expect(monthSelect.value).toEqual("11");
 });
 
-test("check can enter and search postcode with maximum 8 chars", () => {
+test("check that you can't enter postcode before inputting address duration", () => {
   const dom = render(<App />);
+  const postcodeSearch = dom.container.querySelector("#postcode-search");
+  const postcodeSearchInput = postcodeSearch?.getElementsByClassName(
+    "input"
+  )[0] as HTMLInputElement;
+  expect(postcodeSearchInput.value).toEqual("");
+  userEvent.type(postcodeSearchInput, "NN40 5AYakjsdfkljasd");
+  expect(postcodeSearchInput.value).toEqual("");
+});
+
+test("check can enter and search postcode with maximum 8 chars when months and years are valid", () => {
+  const dom = render(<App />);
+
+  const monthSelect = dom.container.querySelector(
+    "#select-address-months .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(monthSelect, { target: { value: 11 } }); // Select last option
+
+  const yearSelect = dom.container.querySelector(
+    "#select-address-years .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(yearSelect, { target: { value: 5 } }); // Select last option
+
   const postcodeSearch = dom.container.querySelector("#postcode-search");
   const postcodeSearchInput = postcodeSearch?.getElementsByClassName(
     "input"
