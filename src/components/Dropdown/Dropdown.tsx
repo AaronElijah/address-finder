@@ -18,7 +18,7 @@ export const Dropdown = ({
       className="dropdown"
       value={value === null ? undefined : value} // null not allowed value, use undefined
       onChange={(e) => {
-        handleChangeValue(parseInt(e.target.value));
+        handleChangeValue(e.target.value);
       }}
     >
       <option key={"none"} value={undefined} style={{ display: "none" }}>

@@ -5,6 +5,7 @@ import {
   UpdateMonthsAction,
   UpdateYearsAction,
   SetAddressesAction,
+  SetChosenAddressAction,
 } from "./reducer";
 
 describe("unit test reducer updates address durations", () => {
@@ -13,6 +14,7 @@ describe("unit test reducer updates address durations", () => {
     months: null,
     postcode: null,
     addresses: [],
+    chosenAddress: null,
   };
   test("update address duration years", () => {
     const addressYearsAction: UpdateYearsAction = {
@@ -58,5 +60,24 @@ describe("unit test reducer updates address durations", () => {
     };
     const newState = reducer(initial, addressesAction);
     expect(newState.addresses).toEqual(addressesAction.payload.addresses);
+  });
+
+  test("update chosen address", () => {
+    const chosenAddressesAction: SetChosenAddressAction = {
+      type: actionTypes.setChosenAddress,
+      payload: {
+        address: [
+          "1 test street",
+          "test lane",
+          "test area",
+          "test city",
+          "test county",
+        ],
+      },
+    };
+    const newState = reducer(initial, chosenAddressesAction);
+    expect(newState.chosenAddress).toEqual(
+      chosenAddressesAction.payload.address
+    );
   });
 });

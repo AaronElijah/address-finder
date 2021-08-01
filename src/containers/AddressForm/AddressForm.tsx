@@ -24,9 +24,12 @@ const initialAddressFormState: AddressFormStateType = {
   chosenAddress: null,
 };
 
-const getAddressOptions = (addresses: string[][]) => {
+export const getAddressOptions = (addresses: string[][]) => {
   return addresses.map((address) => ({
-    label: address.join(", "),
+    label:
+      address.reduce((label, line) =>
+        line.length > 0 ? label + ", " + line : label + ""
+      ) + ", UK",
     value: address,
   }));
 };
@@ -59,10 +62,10 @@ export const AddressForm = () => {
             defaultMessage="Select years"
             options={yearOptions}
             value={state.years}
-            handleChangeValue={(newValue: number) =>
+            handleChangeValue={(newValue: string) =>
               dispatch({
                 type: actionTypes.updateYears,
-                payload: { newValue: newValue },
+                payload: { newValue: parseInt(newValue) },
               })
             }
           />
@@ -72,10 +75,10 @@ export const AddressForm = () => {
             defaultMessage="Select months"
             options={monthOptions}
             value={state.months}
-            handleChangeValue={(newValue: number) =>
+            handleChangeValue={(newValue: string) =>
               dispatch({
                 type: actionTypes.updateMonths,
-                payload: { newValue: newValue },
+                payload: { newValue: parseInt(newValue) },
               })
             }
           />
@@ -96,29 +99,34 @@ export const AddressForm = () => {
           handleSearch={async () => {
             if (!!state.postcode) {
               const addresses = await fetchAddress(state.postcode, setModal);
-              dispatch({
-                type: actionTypes.setAddresses,
-                payload: { addresses: addresses },
-              });
+              if (addresses !== undefined) {
+                dispatch({
+                  type: actionTypes.setAddresses,
+                  payload: { addresses: addresses },
+                });
+              }
             }
           }}
         />
       </div>
       {state.addresses.length > 0 ? (
-        <>
+        <div style={{ width: "100%" }}>
           <div className="sub-heading">{"Address"}</div>
-          <Dropdown
-            defaultMessage="Select your address"
-            options={getAddressOptions(state.addresses)}
-            value={state.chosenAddress?.join(" ") ?? null}
-            handleChangeValue={(newAddress: string[]) => {
-              dispatch({
-                type: actionTypes.setChosenAddress,
-                payload: { address: newAddress },
-              });
-            }}
-          />
-        </>
+          <span id="select-address">
+            <Dropdown
+              defaultMessage="Select your address"
+              options={getAddressOptions(state.addresses)}
+              value={state.chosenAddress}
+              handleChangeValue={(newAddress: string[]) => {
+                console.log(newAddress);
+                dispatch({
+                  type: actionTypes.setChosenAddress,
+                  payload: { address: newAddress },
+                });
+              }}
+            />
+          </span>
+        </div>
       ) : (
         <></>
       )}

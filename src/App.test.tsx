@@ -1,6 +1,12 @@
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
+
+const closeModal = () => {
+  const modalButton = screen.getByText("Close") as HTMLButtonElement;
+  console.log(modalButton);
+  fireEvent.click(modalButton);
+};
 
 test("check header text renders with correct text", () => {
   const dom = render(<App />);
@@ -91,8 +97,10 @@ test("check can enter and search postcode with maximum 8 chars when months and y
   expect(postcodeSearchInput.value).toEqual("NN40 5AY");
 });
 
-test("check addresses appear when sucessfully searching postcode", () => {
+test("check addresses appear when sucessfully searching postcode", async () => {
   const dom = render(<App />);
+
+  closeModal();
 
   const monthSelect = dom.container.querySelector(
     "#select-address-months .dropdown"
@@ -109,7 +117,13 @@ test("check addresses appear when sucessfully searching postcode", () => {
     "input"
   )[0] as HTMLInputElement;
   userEvent.type(postcodeSearchInput, "SW1H 0BT");
-  userEvent.type(postcodeSearchInput, "{enter}");
+  fireEvent.click(
+    dom.container.querySelector(
+      "#postcode-search .form .search-glass"
+    ) as HTMLButtonElement
+  );
 
-  const;
+  await waitFor(() => {
+    expect(dom.container.querySelector("#select-address")).toBeInTheDocument();
+  });
 });
