@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import { useReducer } from "react";
 import "./App.css";
 import { Header } from "./components/Header/Header";
 import { AddressForm } from "./containers/AddressForm/AddressForm";
@@ -21,12 +21,6 @@ function App() {
           content={{
             title: context.modal.title,
             subheading: context.modal.subheading,
-          }}
-          hideModal={() => {
-            dispatch({
-              type: "update/modal",
-              payload: { isVisible: false, title: "", subheading: "" },
-            });
           }}
         />
       </div>

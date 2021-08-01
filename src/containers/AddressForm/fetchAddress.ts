@@ -1,31 +1,38 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const apiKey = "eKtESYz-3UWLEdxChO2gHw22427";
+const apiKey = "eKtESYz-3UWLEdxChO2gHw22427"; // refactor into env. var.
 
-export const fetchAddress = async (postcode: string) => {
+export const fetchAddress = async (
+  postcode: string,
+  setModal: (title: string, subheading: string) => void
+): Promise<string[][]> => {
   const config: AxiosRequestConfig = {
     params: {
       "api-key": apiKey,
-      validateStatus: (status: number) => {
-        return status >= 200 && status < 300;
-      },
+      format: true,
+    },
+    validateStatus: (status: number) => {
+      return status >= 200 && status < 300;
     },
   };
   return axios
     .get(`https://api.getAddress.io/find/${postcode}`, config)
     .then((response) => {
-      console.log(response);
+      return response.data.addresses;
     })
     .catch((error) => {
       if (error.response) {
         // handle response errors
-        console.log(error.response);
+        setModal("Error from server", error.response.data.Message);
       } else if (error.request) {
         // handle request errors
-        console.log(error.request);
+        setModal(
+          "Error in request",
+          "Something wrong with request - check api key"
+        );
       } else {
         // handle other errors
-        console.log("Error");
+        setModal("Unknown error", "Please contact admin");
       }
     });
 };

@@ -90,3 +90,26 @@ test("check can enter and search postcode with maximum 8 chars when months and y
   userEvent.type(postcodeSearchInput, "NN40 5AYakjsdfkljasd");
   expect(postcodeSearchInput.value).toEqual("NN40 5AY");
 });
+
+test("check addresses appear when sucessfully searching postcode", () => {
+  const dom = render(<App />);
+
+  const monthSelect = dom.container.querySelector(
+    "#select-address-months .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(monthSelect, { target: { value: 11 } }); // Select last option
+
+  const yearSelect = dom.container.querySelector(
+    "#select-address-years .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(yearSelect, { target: { value: 5 } }); // Select last option
+
+  const postcodeSearch = dom.container.querySelector("#postcode-search");
+  const postcodeSearchInput = postcodeSearch?.getElementsByClassName(
+    "input"
+  )[0] as HTMLInputElement;
+  userEvent.type(postcodeSearchInput, "SW1H 0BT");
+  userEvent.type(postcodeSearchInput, "{enter}");
+
+  const;
+});

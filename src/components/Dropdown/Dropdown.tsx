@@ -2,9 +2,9 @@ import "./Dropdown.css";
 
 interface DropdownProps {
   defaultMessage: string;
-  options: { label: string; value: number }[];
-  value: number | null;
-  handleChangeValue: (value: number) => void;
+  options: { label: string; value: any }[];
+  value: any;
+  handleChangeValue: (value: any) => void;
 }
 
 export const Dropdown = ({

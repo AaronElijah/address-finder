@@ -1,8 +1,10 @@
-import { useReducer } from "react";
+import { useContext, useReducer } from "react";
 import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { InputSearch } from "../../components/InputSearch/InputSearch";
+import { Context } from "../../context/Context";
 import { fetchAddress } from "./fetchAddress";
 import { actionTypes, AddressFormStateType, reducer } from "./reducer";
+import { actionTypes as contextActionTypes } from "../../context/reducer";
 
 const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   value: i,
@@ -18,6 +20,15 @@ const initialAddressFormState: AddressFormStateType = {
   years: null,
   months: null,
   postcode: null,
+  addresses: [],
+  chosenAddress: null,
+};
+
+const getAddressOptions = (addresses: string[][]) => {
+  return addresses.map((address) => ({
+    label: address.join(", "),
+    value: address,
+  }));
 };
 
 const isPostcodeDisabled = (state: AddressFormStateType) =>
@@ -25,6 +36,18 @@ const isPostcodeDisabled = (state: AddressFormStateType) =>
 
 export const AddressForm = () => {
   const [state, dispatch] = useReducer(reducer, initialAddressFormState);
+  const contextDispatch = useContext(Context);
+
+  const setModal = (title: string, subheading: string) => {
+    contextDispatch({
+      type: contextActionTypes.updateModal,
+      payload: {
+        isVisible: true,
+        title: title,
+        subheading: subheading,
+      },
+    });
+  };
   return (
     <div className="address-form-container">
       <div className="sub-heading">
@@ -70,13 +93,35 @@ export const AddressForm = () => {
               payload: { newValue: newValue },
             })
           }
-          handleSearch={() => {
+          handleSearch={async () => {
             if (!!state.postcode) {
-              fetchAddress(state.postcode);
+              const addresses = await fetchAddress(state.postcode, setModal);
+              dispatch({
+                type: actionTypes.setAddresses,
+                payload: { addresses: addresses },
+              });
             }
           }}
         />
       </div>
+      {state.addresses.length > 0 ? (
+        <>
+          <div className="sub-heading">{"Address"}</div>
+          <Dropdown
+            defaultMessage="Select your address"
+            options={getAddressOptions(state.addresses)}
+            value={state.chosenAddress?.join(" ") ?? null}
+            handleChangeValue={(newAddress: string[]) => {
+              dispatch({
+                type: actionTypes.setChosenAddress,
+                payload: { address: newAddress },
+              });
+            }}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

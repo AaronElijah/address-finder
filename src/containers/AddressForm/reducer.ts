@@ -2,12 +2,15 @@ export interface AddressFormStateType {
   years: number | null;
   months: number | null;
   postcode: string | null;
+  addresses: string[][];
+  chosenAddress: string[] | null;
 }
 
 export enum actionTypes {
   updateYears = "update/years",
   updateMonths = "update/months",
   updatePostcode = "update/postcode",
+  setAddresses = "set/addresses",
 }
 
 export interface UpdateYearsAction {
@@ -25,10 +28,16 @@ export interface UpdatePostcodeAction {
   payload: { newValue: string };
 }
 
+export interface SetAddressesAction {
+  type: actionTypes.setAddresses;
+  payload: { addresses: string[][] };
+}
+
 type AddressFormActionType =
   | UpdateYearsAction
   | UpdateMonthsAction
-  | UpdatePostcodeAction;
+  | UpdatePostcodeAction
+  | SetAddressesAction;
 
 export const reducer = (
   state: AddressFormStateType,
@@ -41,6 +50,8 @@ export const reducer = (
       return { ...state, months: action.payload.newValue };
     case actionTypes.updatePostcode:
       return { ...state, postcode: action.payload.newValue };
+    case actionTypes.setAddresses:
+      return { ...state, addresses: action.payload.addresses };
     default:
       return state;
   }

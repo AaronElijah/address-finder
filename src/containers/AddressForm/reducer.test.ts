@@ -4,6 +4,7 @@ import {
   UpdatePostcodeAction,
   UpdateMonthsAction,
   UpdateYearsAction,
+  SetAddressesAction,
 } from "./reducer";
 
 describe("unit test reducer updates address durations", () => {
@@ -11,6 +12,7 @@ describe("unit test reducer updates address durations", () => {
     years: null,
     months: null,
     postcode: null,
+    addresses: [],
   };
   test("update address duration years", () => {
     const addressYearsAction: UpdateYearsAction = {
@@ -18,7 +20,7 @@ describe("unit test reducer updates address durations", () => {
       payload: { newValue: 1 },
     };
     const newState = reducer(initial, addressYearsAction);
-    expect(newState.years).toEqual(1);
+    expect(newState.years).toEqual(addressYearsAction.payload.newValue);
   });
 
   test("update address duration months", () => {
@@ -27,7 +29,7 @@ describe("unit test reducer updates address durations", () => {
       payload: { newValue: 8 },
     };
     const newState = reducer(initial, addressMonthsAction);
-    expect(newState.months).toEqual(8);
+    expect(newState.months).toEqual(addressMonthsAction.payload.newValue);
   });
 
   test("update postcode", () => {
@@ -36,6 +38,25 @@ describe("unit test reducer updates address durations", () => {
       payload: { newValue: "E16 1PG" },
     };
     const newState = reducer(initial, addressPostcodeAction);
-    expect(newState.postcode).toEqual("E16 1PG");
+    expect(newState.postcode).toEqual(addressPostcodeAction.payload.newValue);
+  });
+
+  test("update addresses", () => {
+    const addressesAction: SetAddressesAction = {
+      type: actionTypes.setAddresses,
+      payload: {
+        addresses: [
+          [
+            "1 test street",
+            "test lane",
+            "test area",
+            "test city",
+            "test county",
+          ],
+        ],
+      },
+    };
+    const newState = reducer(initial, addressesAction);
+    expect(newState.addresses).toEqual(addressesAction.payload.addresses);
   });
 });
