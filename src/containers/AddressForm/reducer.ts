@@ -1,4 +1,4 @@
-type Address = {
+export type Address = {
   line1: string;
   line2: string;
   line3: string;
@@ -6,7 +6,11 @@ type Address = {
   county: string;
 };
 
-type AddressWithPostcode = Address & { postcode: string };
+type SavedAddress = Address & {
+  postcode: string;
+  years: number;
+  months: number;
+};
 
 export interface AddressFormStateType {
   years: number | null;
@@ -14,7 +18,7 @@ export interface AddressFormStateType {
   postcode: string | null;
   addresses: string[][];
   chosenAddress: Address | null;
-  savedAddress: AddressWithPostcode | null;
+  savedAddress: SavedAddress | null;
 }
 
 export enum actionTypes {
@@ -23,6 +27,7 @@ export enum actionTypes {
   updatePostcode = "update/postcode",
   setAddresses = "set/addresses",
   setChosenAddress = "set/chosenaddress",
+  saveAddress = "save/address",
 }
 
 export interface UpdateYearsAction {
@@ -46,7 +51,11 @@ export interface SetAddressesAction {
 }
 export interface SetChosenAddressAction {
   type: actionTypes.setChosenAddress;
-  payload: { address: string[] };
+  payload: { addressOption: string };
+}
+
+export interface SaveAddressAction {
+  type: actionTypes.saveAddress;
 }
 
 type AddressFormActionType =
@@ -54,12 +63,13 @@ type AddressFormActionType =
   | UpdateMonthsAction
   | UpdatePostcodeAction
   | SetAddressesAction
-  | SetChosenAddressAction;
+  | SetChosenAddressAction
+  | SaveAddressAction;
 
 export const reducer = (
   state: AddressFormStateType,
   action: AddressFormActionType
-) => {
+): AddressFormStateType => {
   switch (action.type) {
     case actionTypes.updateYears:
       return { ...state, years: action.payload.newValue };
@@ -70,14 +80,34 @@ export const reducer = (
     case actionTypes.setAddresses:
       return { ...state, addresses: action.payload.addresses };
     case actionTypes.setChosenAddress:
+      const addressParts = action.payload.addressOption.split(",");
       return {
         ...state,
         chosenAddress: {
-          line1: action.payload.address[0],
-          line2: action.payload.address[1],
-          line3: action.payload.address[2],
-          city: action.payload.address[3],
-          county: action.payload.address[4],
+          line1: addressParts[0],
+          line2: addressParts[1],
+          line3: addressParts[2],
+          city: addressParts[3],
+          county: addressParts[4],
+        },
+      };
+    case actionTypes.saveAddress:
+      return {
+        ...state,
+        postcode: null,
+        years: null,
+        months: null,
+        chosenAddress: null,
+        addresses: [],
+        savedAddress: {
+          postcode: state.postcode as string,
+          years: state.years as number,
+          months: state.months as number,
+          line1: state.chosenAddress?.line1 as string,
+          line2: state.chosenAddress?.line2 as string,
+          line3: state.chosenAddress?.line3 as string,
+          city: state.chosenAddress?.city as string,
+          county: state.chosenAddress?.county as string,
         },
       };
     default:

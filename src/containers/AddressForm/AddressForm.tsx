@@ -3,7 +3,7 @@ import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { InputSearch } from "../../components/InputSearch/InputSearch";
 import { Context } from "../../context/Context";
 import { fetchAddress } from "./fetchAddress";
-import { actionTypes, AddressFormStateType, reducer } from "./reducer";
+import { actionTypes, Address, AddressFormStateType, reducer } from "./reducer";
 import { actionTypes as contextActionTypes } from "../../context/reducer";
 
 const yearOptions = Array.from({ length: 6 }, (_, i) => ({
@@ -33,6 +33,16 @@ export const getAddressOptions = (addresses: string[][]) => {
       ) + ", UK",
     value: address,
   }));
+};
+
+export const getAddressArray = (address: Address) => {
+  return [
+    address.line1,
+    address.line2,
+    address.line3,
+    address.city,
+    address.county,
+  ];
 };
 
 const isPostcodeDisabled = (state: AddressFormStateType) =>
@@ -131,12 +141,15 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
             <Dropdown
               defaultMessage="Select your address"
               options={getAddressOptions(state.addresses)}
-              value={state.chosenAddress}
-              handleChangeValue={(newAddress: string[]) => {
-                console.log(newAddress);
+              value={
+                state.chosenAddress !== null
+                  ? getAddressArray(state.chosenAddress)
+                  : null
+              }
+              handleChangeValue={(newAddress: string) => {
                 dispatch({
                   type: actionTypes.setChosenAddress,
-                  payload: { address: newAddress },
+                  payload: { addressOption: newAddress },
                 });
               }}
             />
@@ -151,7 +164,13 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
           <input value={state.chosenAddress.line2} />
           <input value={state.chosenAddress.city} />
           <input value={state.chosenAddress.county} />
-          <button>{"Submit address"}</button>
+          <button
+            onClick={() => {
+              dispatch({ type: actionTypes.saveAddress });
+            }}
+          >
+            {"Submit address"}
+          </button>
         </div>
       ) : (
         <></>

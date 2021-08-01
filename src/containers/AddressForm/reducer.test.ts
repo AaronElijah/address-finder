@@ -67,13 +67,8 @@ describe("unit test reducer updates address durations", () => {
     const chosenAddressesAction: SetChosenAddressAction = {
       type: actionTypes.setChosenAddress,
       payload: {
-        address: [
-          "1 test street",
-          "test lane",
-          "test area",
-          "test city",
-          "test county",
-        ],
+        addressOption:
+          "1 test street,test lane,test area,test city,test county",
       },
     };
     const newState = reducer(initial, chosenAddressesAction);

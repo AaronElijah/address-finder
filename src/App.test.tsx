@@ -4,13 +4,17 @@ import App from "./App";
 
 const closeModal = () => {
   const modalButton = screen.getByText("Close") as HTMLButtonElement;
-  console.log(modalButton);
   fireEvent.click(modalButton);
 };
 
 test("check saved address does not initially appear", () => {
   const dom = render(<App />);
   expect(dom.container.querySelector("#saved-address")).not.toBeInTheDocument();
+});
+
+test("check that modal first appears", () => {
+  render(<App />);
+  expect(screen.getByText("Welcome to Octopus Weath")).toBeInTheDocument();
 });
 
 test("check header text renders with correct text", () => {
@@ -82,7 +86,6 @@ test("check that you can't enter postcode before inputting address duration", ()
 
 test("check can enter and search postcode with maximum 8 chars when months and years are valid", () => {
   const dom = render(<App />);
-
   const monthSelect = dom.container.querySelector(
     "#select-address-months .dropdown"
   ) as HTMLSelectElement;
@@ -122,11 +125,13 @@ test("check addresses appear when sucessfully searching postcode", async () => {
     "input"
   )[0] as HTMLInputElement;
   userEvent.type(postcodeSearchInput, "SW1H 0BT");
-  fireEvent.click(
-    dom.container.querySelector(
-      "#postcode-search .form .search-glass"
-    ) as HTMLButtonElement
-  );
+  // Turn this off to prevent unnecessary api requests
+  // Or mock it temporarily
+  // fireEvent.click(
+  //   dom.container.querySelector(
+  //     "#postcode-search .form .search-glass"
+  //   ) as HTMLButtonElement
+  // );
 
   await waitFor(() => {
     expect(
@@ -138,7 +143,7 @@ test("check addresses appear when sucessfully searching postcode", async () => {
     "#select-address-list .dropdown"
   ) as HTMLSelectElement;
   fireEvent.change(addressSelect, {
-    target: { value: ["St. Andrews House", "Broadway", "", "London", ""] },
+    target: { value: "St. Andrews House,Broadway,,London," },
   });
   expect(addressSelect.value).toEqual("St. Andrews House,Broadway,,London,");
 });
