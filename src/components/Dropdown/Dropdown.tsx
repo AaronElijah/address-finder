@@ -3,16 +3,27 @@ import "./Dropdown.css";
 interface DropdownProps {
   defaultMessage: string;
   options: { label: string; value: any }[];
+  value: any;
+  handleChangeValue: (value: any) => void;
 }
 
-export const Dropdown = ({ defaultMessage, options }: DropdownProps) => {
+export const Dropdown = ({
+  defaultMessage,
+  options,
+  value,
+  handleChangeValue,
+}: DropdownProps) => {
   return (
     <select
       className="dropdown"
-      defaultValue={defaultMessage}
-      // value={defaultMessage}
+      value={value === null ? undefined : value} // null not allowed value, use undefined
+      onChange={(e) => {
+        handleChangeValue(e.target.value);
+      }}
     >
-      <option style={{ display: "none" }}>{defaultMessage}</option>
+      <option key={"none"} value={undefined} style={{ display: "none" }}>
+        {defaultMessage}
+      </option>
       {options.map((option) => (
         <option
           data-testid="select-option"

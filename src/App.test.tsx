@@ -1,5 +1,12 @@
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import App from "./App";
+
+const closeModal = () => {
+  const modalButton = screen.getByText("Close") as HTMLButtonElement;
+  console.log(modalButton);
+  fireEvent.click(modalButton);
+};
 
 test("check header text renders with correct text", () => {
   const dom = render(<App />);
@@ -55,4 +62,68 @@ test("Check can select month in address duration dropdowns", () => {
     }
   }
   expect(monthSelect.value).toEqual("11");
+});
+
+test("check that you can't enter postcode before inputting address duration", () => {
+  const dom = render(<App />);
+  const postcodeSearch = dom.container.querySelector("#postcode-search");
+  const postcodeSearchInput = postcodeSearch?.getElementsByClassName(
+    "input"
+  )[0] as HTMLInputElement;
+  expect(postcodeSearchInput.value).toEqual("");
+  userEvent.type(postcodeSearchInput, "NN40 5AYakjsdfkljasd");
+  expect(postcodeSearchInput.value).toEqual("");
+});
+
+test("check can enter and search postcode with maximum 8 chars when months and years are valid", () => {
+  const dom = render(<App />);
+
+  const monthSelect = dom.container.querySelector(
+    "#select-address-months .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(monthSelect, { target: { value: 11 } }); // Select last option
+
+  const yearSelect = dom.container.querySelector(
+    "#select-address-years .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(yearSelect, { target: { value: 5 } }); // Select last option
+
+  const postcodeSearch = dom.container.querySelector("#postcode-search");
+  const postcodeSearchInput = postcodeSearch?.getElementsByClassName(
+    "input"
+  )[0] as HTMLInputElement;
+  expect(postcodeSearchInput.value).toEqual("");
+  userEvent.type(postcodeSearchInput, "NN40 5AYakjsdfkljasd");
+  expect(postcodeSearchInput.value).toEqual("NN40 5AY");
+});
+
+test("check addresses appear when sucessfully searching postcode", async () => {
+  const dom = render(<App />);
+
+  closeModal();
+
+  const monthSelect = dom.container.querySelector(
+    "#select-address-months .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(monthSelect, { target: { value: 11 } }); // Select last option
+
+  const yearSelect = dom.container.querySelector(
+    "#select-address-years .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(yearSelect, { target: { value: 5 } }); // Select last option
+
+  const postcodeSearch = dom.container.querySelector("#postcode-search");
+  const postcodeSearchInput = postcodeSearch?.getElementsByClassName(
+    "input"
+  )[0] as HTMLInputElement;
+  userEvent.type(postcodeSearchInput, "SW1H 0BT");
+  fireEvent.click(
+    dom.container.querySelector(
+      "#postcode-search .form .search-glass"
+    ) as HTMLButtonElement
+  );
+
+  await waitFor(() => {
+    expect(dom.container.querySelector("#select-address")).toBeInTheDocument();
+  });
 });
