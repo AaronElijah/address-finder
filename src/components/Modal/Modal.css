@@ -4,7 +4,9 @@
   height: 250px;
   width: 250px;
   top: 40%;
-  left: 35%;
+  left: 50%;
+  transform: translate(-50%);
+  float: right;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

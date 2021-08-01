@@ -22,6 +22,7 @@ const initialAddressFormState: AddressFormStateType = {
   postcode: null,
   addresses: [],
   chosenAddress: null,
+  savedAddress: null,
 };
 
 export const getAddressOptions = (addresses: string[][]) => {
@@ -37,7 +38,11 @@ export const getAddressOptions = (addresses: string[][]) => {
 const isPostcodeDisabled = (state: AddressFormStateType) =>
   state.years === null || state.months === null;
 
-export const AddressForm = () => {
+interface AddressFormProps {
+  isDisabled: boolean;
+}
+
+export const AddressForm = ({ isDisabled }: AddressFormProps) => {
   const [state, dispatch] = useReducer(reducer, initialAddressFormState);
   const contextDispatch = useContext(Context);
 
@@ -52,7 +57,17 @@ export const AddressForm = () => {
     });
   };
   return (
-    <div className="address-form-container">
+    <div className={`address-form-container ${isDisabled ? "disabled" : ""}`}>
+      {state.savedAddress !== null ? (
+        <div id="saved-address">
+          <div>{"Address and delete button"}</div>
+          <div>{`Time at address: ${state.years} ${
+            state.years === 1 ? "year" : "years"
+          }, ${state.months} ${state.months === 1 ? "month" : "months"}`}</div>
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="sub-heading">
         {"How long have you lived at your current address?"}
       </div>
@@ -110,9 +125,9 @@ export const AddressForm = () => {
         />
       </div>
       {state.addresses.length > 0 ? (
-        <div style={{ width: "100%" }}>
+        <div className="select-address">
           <div className="sub-heading">{"Address"}</div>
-          <span id="select-address">
+          <span id="select-address-list">
             <Dropdown
               defaultMessage="Select your address"
               options={getAddressOptions(state.addresses)}
@@ -126,6 +141,17 @@ export const AddressForm = () => {
               }}
             />
           </span>
+        </div>
+      ) : (
+        <></>
+      )}
+      {state.chosenAddress !== null ? (
+        <div>
+          <input value={state.chosenAddress.line1} />
+          <input value={state.chosenAddress.line2} />
+          <input value={state.chosenAddress.city} />
+          <input value={state.chosenAddress.county} />
+          <button>{"Submit address"}</button>
         </div>
       ) : (
         <></>

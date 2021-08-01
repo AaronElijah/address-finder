@@ -15,6 +15,7 @@ describe("unit test reducer updates address durations", () => {
     postcode: null,
     addresses: [],
     chosenAddress: null,
+    savedAddress: null,
   };
   test("update address duration years", () => {
     const addressYearsAction: UpdateYearsAction = {
@@ -76,8 +77,12 @@ describe("unit test reducer updates address durations", () => {
       },
     };
     const newState = reducer(initial, chosenAddressesAction);
-    expect(newState.chosenAddress).toEqual(
-      chosenAddressesAction.payload.address
-    );
+    expect(newState.chosenAddress).toEqual({
+      city: "test city",
+      county: "test county",
+      line1: "1 test street",
+      line2: "test lane",
+      line3: "test area",
+    });
   });
 });

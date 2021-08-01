@@ -8,6 +8,11 @@ const closeModal = () => {
   fireEvent.click(modalButton);
 };
 
+test("check saved address does not initially appear", () => {
+  const dom = render(<App />);
+  expect(dom.container.querySelector("#saved-address")).not.toBeInTheDocument();
+});
+
 test("check header text renders with correct text", () => {
   const dom = render(<App />);
   const headerTitle = dom.container.querySelector(".header .title");
@@ -124,6 +129,16 @@ test("check addresses appear when sucessfully searching postcode", async () => {
   );
 
   await waitFor(() => {
-    expect(dom.container.querySelector("#select-address")).toBeInTheDocument();
+    expect(
+      dom.container.querySelector("#select-address-list .dropdown")
+    ).toBeInTheDocument();
   });
+
+  const addressSelect = dom.container.querySelector(
+    "#select-address-list .dropdown"
+  ) as HTMLSelectElement;
+  fireEvent.change(addressSelect, {
+    target: { value: ["St. Andrews House", "Broadway", "", "London", ""] },
+  });
+  expect(addressSelect.value).toEqual("St. Andrews House,Broadway,,London,");
 });

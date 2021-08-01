@@ -20,6 +20,10 @@
   align-items: flex-start;
 }
 
+.disabled {
+  pointer-events: none;
+}
+
 .address-form-container .sub-heading {
   width: 100%;
   text-align: left;
@@ -48,7 +52,11 @@
   flex-direction: row;
 }
 
-.address-form-container #address-select {
+.address-form-container #address-search {
+  width: 100%;
+}
+
+.address-form-container #address-select-list {
   width: 100%;
   display: flex;
   flex-direction: row;

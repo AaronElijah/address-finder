@@ -1,9 +1,20 @@
+type Address = {
+  line1: string;
+  line2: string;
+  line3: string;
+  city: string;
+  county: string;
+};
+
+type AddressWithPostcode = Address & { postcode: string };
+
 export interface AddressFormStateType {
   years: number | null;
   months: number | null;
   postcode: string | null;
   addresses: string[][];
-  chosenAddress: string[] | null;
+  chosenAddress: Address | null;
+  savedAddress: AddressWithPostcode | null;
 }
 
 export enum actionTypes {
@@ -59,7 +70,16 @@ export const reducer = (
     case actionTypes.setAddresses:
       return { ...state, addresses: action.payload.addresses };
     case actionTypes.setChosenAddress:
-      return { ...state, chosenAddress: action.payload.address };
+      return {
+        ...state,
+        chosenAddress: {
+          line1: action.payload.address[0],
+          line2: action.payload.address[1],
+          line3: action.payload.address[2],
+          city: action.payload.address[3],
+          county: action.payload.address[4],
+        },
+      };
     default:
       return state;
   }

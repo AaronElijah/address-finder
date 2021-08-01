@@ -14,7 +14,7 @@ function App() {
       <div className="App">
         <Header title="Address Search" subtitle="Please enter your address" />
         <div className="App-main">
-          <AddressForm />
+          <AddressForm isDisabled={context.modal.isVisible} />
         </div>
         <Modal
           isVisible={context.modal.isVisible}
