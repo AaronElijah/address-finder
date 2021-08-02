@@ -27,7 +27,7 @@ export const InputSearchView = ({
         disabled={disabled}
       ></input>
       <button
-        className="search-glass"
+        className="search-glass button-hover"
         onClick={onSearch}
         disabled={disabled}
       ></button>

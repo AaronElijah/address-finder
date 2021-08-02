@@ -68,12 +68,19 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
   };
   return (
     <div className={`address-form-container ${isDisabled ? "disabled" : ""}`}>
-      {state.savedAddress !== null ? (
+      {state.savedAddress === null ? (
         <div id="saved-address">
-          <div>{"Address and delete button"}</div>
-          <div>{`Time at address: ${state.years} ${
-            state.years === 1 ? "year" : "years"
-          }, ${state.months} ${state.months === 1 ? "month" : "months"}`}</div>
+          <div className="lines">
+            <div>{"Address and delete button"}</div>
+            <button className="delete-icon button-hover"></button>
+          </div>
+          <div className="lines">
+            <div>{`Time at address: ${state.years} ${
+              state.years === 1 ? "year" : "years"
+            }, ${state.months} ${
+              state.months === 1 ? "month" : "months"
+            }`}</div>
+          </div>
         </div>
       ) : (
         <></>
@@ -159,17 +166,23 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
         <></>
       )}
       {state.chosenAddress !== null ? (
-        <div>
-          <input value={state.chosenAddress.line1} />
-          <input value={state.chosenAddress.line2} />
-          <input value={state.chosenAddress.city} />
-          <input value={state.chosenAddress.county} />
+        <div id="address-lines-block">
+          <div className="sub-heading">{"Address Line 1*"}</div>
+          <input className="address-lines" value={"1 test street"} />
+          <div className="sub-heading">{"Address Line 2*"}</div>
+          <input className="address-lines" value={"test avenue"} />
+          {/* <input className="address-lines" value={state.chosenAddress?.city} />
+          <input
+            className="address-lines"
+            value={state.chosenAddress?.county}
+          /> */}
           <button
+            id="submit-button"
             onClick={() => {
               dispatch({ type: actionTypes.saveAddress });
             }}
           >
-            {"Submit address"}
+            {"Add address"}
           </button>
         </div>
       ) : (
