@@ -19,6 +19,7 @@ export const InputSearch = ({
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.value.length <= 8) {
+      // no postcode longer than 8 characters
       handleChange(e.target.value);
     }
   };

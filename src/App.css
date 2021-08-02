@@ -13,43 +13,10 @@
   align-items: center;
 }
 
-.address-form-container {
-  width: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.disabled {
+  pointer-events: none;
 }
 
-.address-form-container .sub-heading {
-  width: 100%;
-  text-align: left;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.address-form-container #duration-answers {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.address-form-container #duration-answers #select-address-years {
-  width: 48%;
-}
-
-.address-form-container #duration-answers #select-address-months {
-  width: 48%;
-}
-
-.address-form-container #postcode-search {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-.address-form-container #address-select {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
+.button-hover {
+  cursor: pointer;
 }

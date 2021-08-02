@@ -1,4 +1,9 @@
-# Getting Started with Create React App
+# Getting Started with Octopus Wealth Address Finder
+
+Here is my demo of the mock up address finger for Octopus Wealth's technical interview. The aim is to type in the duration you stay at an address, search for an address using an
+external API endpoint, choose the address and then edit/save/delete that address. When designing this mock-up, I thought about how best to showcase skills in React. This includes using the Context API/reducer pattern for application state management, splitting components into purely UI views or stateful functional components and integration testing with react-testing-library.
+
+To view, please visit https://aaronelijah.github.io/address-finder/ or run locally by cloning the repo and running `npm run install && npm run start` from root directory.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

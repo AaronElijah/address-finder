@@ -1,0 +1,112 @@
+.address-form-container {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.address-form-container .sub-heading {
+  width: 100%;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.address-form-container #saved-address {
+  width: 100%;
+  background-color: darkmagenta;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100px;
+}
+
+.address-form-container #saved-address .lines {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-inline: 10px;
+}
+
+.address-form-container #saved-address .delete-icon {
+  background-image: url("../../assets/delete.png");
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
+  background-color: transparent;
+  width: 15px;
+  height: 15px;
+  border: none;
+}
+
+.address-form-container #duration-answers {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.address-form-container #duration-answers #select-address-years {
+  width: 48%;
+}
+
+.address-form-container #duration-answers #select-address-months {
+  width: 48%;
+}
+
+.address-form-container #postcode-search {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.address-form-container #address-search {
+  width: 100%;
+}
+
+.address-form-container .select-address {
+  width: 100%;
+}
+
+.address-form-container #select-address-list {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.address-form-container #address-lines-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.address-form-container #double-chevron {
+  background-image: url(../../assets/double-chevron.png);
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
+  background-color: transparent;
+  width: 15px;
+  height: 15px;
+  margin-top: 15px;
+}
+
+.address-form-container .address-lines {
+  width: 100%;
+  background-color: inherit;
+  border: 1px solid #ccc;
+  color: inherit;
+  height: 34px;
+  font-size: inherit;
+  padding-inline-start: 20px;
+  box-sizing: border-box;
+}
+
+.address-form-container #submit-button {
+  margin-top: 15px;
+  width: 75px;
+  border-radius: 25px;
+  background-color: ivory;
+  color: purple;
+}

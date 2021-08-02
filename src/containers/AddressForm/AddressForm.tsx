@@ -3,8 +3,15 @@ import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { InputSearch } from "../../components/InputSearch/InputSearch";
 import { Context } from "../../context/Context";
 import { fetchAddress } from "./fetchAddress";
-import { actionTypes, AddressFormStateType, reducer } from "./reducer";
+import {
+  actionTypes,
+  Address,
+  AddressFormStateType,
+  reducer,
+  SavedAddress,
+} from "./reducer";
 import { actionTypes as contextActionTypes } from "../../context/reducer";
+import "./AddressForm.css";
 
 const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   value: i,
@@ -22,6 +29,7 @@ const initialAddressFormState: AddressFormStateType = {
   postcode: null,
   addresses: [],
   chosenAddress: null,
+  savedAddress: null,
 };
 
 export const getAddressOptions = (addresses: string[][]) => {
@@ -34,10 +42,34 @@ export const getAddressOptions = (addresses: string[][]) => {
   }));
 };
 
+export const getAddressArray = (address: Address) => {
+  return [
+    address.line1,
+    address.line2,
+    address.line3,
+    address.city,
+    address.county,
+  ];
+};
+
+export const getAddressDisplay = (savedAddress: SavedAddress) => {
+  return `${savedAddress.line1}, ${savedAddress.line2}, ${savedAddress.city}, ${savedAddress.postcode}`;
+};
+
 const isPostcodeDisabled = (state: AddressFormStateType) =>
   state.years === null || state.months === null;
 
-export const AddressForm = () => {
+const isSaveButtonDisabled = (state: AddressFormStateType) =>
+  state.chosenAddress?.line1 === "" ||
+  state.chosenAddress?.line2 === "" ||
+  state.chosenAddress?.city === "" ||
+  state.postcode === "";
+
+interface AddressFormProps {
+  isDisabled: boolean;
+}
+
+export const AddressForm = ({ isDisabled }: AddressFormProps) => {
   const [state, dispatch] = useReducer(reducer, initialAddressFormState);
   const contextDispatch = useContext(Context);
 
@@ -51,8 +83,39 @@ export const AddressForm = () => {
       },
     });
   };
+
+  const handleChangePostcode = (newValue: string) => {
+    dispatch({
+      type: actionTypes.updatePostcode,
+      payload: { newValue: newValue },
+    });
+  };
+
   return (
-    <div className="address-form-container">
+    <div className={`address-form-container ${isDisabled ? "disabled" : ""}`}>
+      {state.savedAddress !== null ? (
+        <div id="saved-address">
+          <div className="lines">
+            <div>{getAddressDisplay(state.savedAddress)}</div>
+            <button
+              className="delete-icon button-hover"
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch({ type: actionTypes.deleteAddress });
+              }}
+            ></button>
+          </div>
+          <div className="lines">
+            <div>{`Time at address: ${state.savedAddress.years} ${
+              state.savedAddress.years === 1 ? "year" : "years"
+            }, ${state.savedAddress.months} ${
+              state.savedAddress.months === 1 ? "month" : "months"
+            }`}</div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="sub-heading">
         {"How long have you lived at your current address?"}
       </div>
@@ -90,12 +153,7 @@ export const AddressForm = () => {
           value={state.postcode}
           placeholder={"Enter postcode"}
           disabled={isPostcodeDisabled(state)}
-          handleChange={(newValue: string) =>
-            dispatch({
-              type: actionTypes.updatePostcode,
-              payload: { newValue: newValue },
-            })
-          }
+          handleChange={handleChangePostcode}
           handleSearch={async () => {
             if (!!state.postcode) {
               const addresses = await fetchAddress(state.postcode, setModal);
@@ -110,22 +168,95 @@ export const AddressForm = () => {
         />
       </div>
       {state.addresses.length > 0 ? (
-        <div style={{ width: "100%" }}>
+        <div className="select-address">
           <div className="sub-heading">{"Address"}</div>
-          <span id="select-address">
+          <span id="select-address-list">
             <Dropdown
               defaultMessage="Select your address"
               options={getAddressOptions(state.addresses)}
-              value={state.chosenAddress}
-              handleChangeValue={(newAddress: string[]) => {
-                console.log(newAddress);
+              value={
+                state.chosenAddress !== null
+                  ? getAddressArray(state.chosenAddress)
+                  : null
+              }
+              handleChangeValue={(newAddress: string) => {
                 dispatch({
                   type: actionTypes.setChosenAddress,
-                  payload: { address: newAddress },
+                  payload: { addressOption: newAddress },
                 });
               }}
             />
           </span>
+        </div>
+      ) : (
+        <></>
+      )}
+      {state.chosenAddress !== null && state.postcode !== null ? (
+        <div id="address-lines-block">
+          <div id="double-chevron"></div>
+          <div className="sub-heading">{"Address Line 1*"}</div>
+          <input
+            id="address-line-1"
+            className="address-lines"
+            value={state.chosenAddress.line1}
+            onChange={(e) => {
+              e.preventDefault();
+              dispatch({
+                type: actionTypes.updateChosenAddress,
+                payload: { line1: e.target.value },
+              });
+            }}
+          />
+          <div className="sub-heading">{"Address Line 2*"}</div>
+          <input
+            id="address-line-2"
+            className="address-lines"
+            value={state.chosenAddress.line2}
+            onChange={(e) => {
+              e.preventDefault();
+              dispatch({
+                type: actionTypes.updateChosenAddress,
+                payload: { line2: e.target.value },
+              });
+            }}
+          />
+          <div className="sub-heading">{"City*"}</div>
+          <input
+            id="address-line-city"
+            className="address-lines"
+            value={state.chosenAddress.city}
+            onChange={(e) => {
+              e.preventDefault();
+              dispatch({
+                type: actionTypes.updateChosenAddress,
+                payload: { city: e.target.value },
+              });
+            }}
+          />
+          <div className="sub-heading">{"Postcode*"}</div>
+          <input
+            id="address-line-postcode"
+            className="address-lines"
+            value={state.postcode}
+            onChange={(e) =>
+              dispatch({
+                type: actionTypes.updatePostcode,
+                payload: { newValue: e.target.value },
+              })
+            }
+          />
+          <button
+            id="submit-button"
+            onClick={() => {
+              if (!isSaveButtonDisabled(state)) {
+                dispatch({ type: actionTypes.saveAddress });
+              } else {
+                setModal("Invalid", "Please fill in all address form");
+              }
+            }}
+          >
+            {"Add address"}
+          </button>
         </div>
       ) : (
         <></>
