@@ -3,8 +3,15 @@ import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { InputSearch } from "../../components/InputSearch/InputSearch";
 import { Context } from "../../context/Context";
 import { fetchAddress } from "./fetchAddress";
-import { actionTypes, Address, AddressFormStateType, reducer } from "./reducer";
+import {
+  actionTypes,
+  Address,
+  AddressFormStateType,
+  reducer,
+  SavedAddress,
+} from "./reducer";
 import { actionTypes as contextActionTypes } from "../../context/reducer";
+import "./AddressForm.css";
 
 const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   value: i,
@@ -45,8 +52,18 @@ export const getAddressArray = (address: Address) => {
   ];
 };
 
+export const getAddressDisplay = (savedAddress: SavedAddress) => {
+  return `${savedAddress.line1}, ${savedAddress.line2}, ${savedAddress.city}, ${savedAddress.postcode}`;
+};
+
 const isPostcodeDisabled = (state: AddressFormStateType) =>
   state.years === null || state.months === null;
+
+const isSaveButtonDisabled = (state: AddressFormStateType) =>
+  state.chosenAddress?.line1 === "" ||
+  state.chosenAddress?.line2 === "" ||
+  state.chosenAddress?.city === "" ||
+  state.postcode === "";
 
 interface AddressFormProps {
   isDisabled: boolean;
@@ -66,19 +83,33 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
       },
     });
   };
+
+  const handleChangePostcode = (newValue: string) => {
+    dispatch({
+      type: actionTypes.updatePostcode,
+      payload: { newValue: newValue },
+    });
+  };
+
   return (
     <div className={`address-form-container ${isDisabled ? "disabled" : ""}`}>
-      {state.savedAddress === null ? (
+      {state.savedAddress !== null ? (
         <div id="saved-address">
           <div className="lines">
-            <div>{"Address and delete button"}</div>
-            <button className="delete-icon button-hover"></button>
+            <div>{getAddressDisplay(state.savedAddress)}</div>
+            <button
+              className="delete-icon button-hover"
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch({ type: actionTypes.deleteAddress });
+              }}
+            ></button>
           </div>
           <div className="lines">
-            <div>{`Time at address: ${state.years} ${
-              state.years === 1 ? "year" : "years"
-            }, ${state.months} ${
-              state.months === 1 ? "month" : "months"
+            <div>{`Time at address: ${state.savedAddress.years} ${
+              state.savedAddress.years === 1 ? "year" : "years"
+            }, ${state.savedAddress.months} ${
+              state.savedAddress.months === 1 ? "month" : "months"
             }`}</div>
           </div>
         </div>
@@ -122,12 +153,7 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
           value={state.postcode}
           placeholder={"Enter postcode"}
           disabled={isPostcodeDisabled(state)}
-          handleChange={(newValue: string) =>
-            dispatch({
-              type: actionTypes.updatePostcode,
-              payload: { newValue: newValue },
-            })
-          }
+          handleChange={handleChangePostcode}
           handleSearch={async () => {
             if (!!state.postcode) {
               const addresses = await fetchAddress(state.postcode, setModal);
@@ -165,21 +191,68 @@ export const AddressForm = ({ isDisabled }: AddressFormProps) => {
       ) : (
         <></>
       )}
-      {state.chosenAddress !== null ? (
+      {state.chosenAddress !== null && state.postcode !== null ? (
         <div id="address-lines-block">
+          <div id="double-chevron"></div>
           <div className="sub-heading">{"Address Line 1*"}</div>
-          <input className="address-lines" value={"1 test street"} />
-          <div className="sub-heading">{"Address Line 2*"}</div>
-          <input className="address-lines" value={"test avenue"} />
-          {/* <input className="address-lines" value={state.chosenAddress?.city} />
           <input
+            id="address-line-1"
             className="address-lines"
-            value={state.chosenAddress?.county}
-          /> */}
+            value={state.chosenAddress.line1}
+            onChange={(e) => {
+              e.preventDefault();
+              dispatch({
+                type: actionTypes.updateChosenAddress,
+                payload: { line1: e.target.value },
+              });
+            }}
+          />
+          <div className="sub-heading">{"Address Line 2*"}</div>
+          <input
+            id="address-line-2"
+            className="address-lines"
+            value={state.chosenAddress.line2}
+            onChange={(e) => {
+              e.preventDefault();
+              dispatch({
+                type: actionTypes.updateChosenAddress,
+                payload: { line2: e.target.value },
+              });
+            }}
+          />
+          <div className="sub-heading">{"City*"}</div>
+          <input
+            id="address-line-city"
+            className="address-lines"
+            value={state.chosenAddress.city}
+            onChange={(e) => {
+              e.preventDefault();
+              dispatch({
+                type: actionTypes.updateChosenAddress,
+                payload: { city: e.target.value },
+              });
+            }}
+          />
+          <div className="sub-heading">{"Postcode*"}</div>
+          <input
+            id="address-line-postcode"
+            className="address-lines"
+            value={state.postcode}
+            onChange={(e) =>
+              dispatch({
+                type: actionTypes.updatePostcode,
+                payload: { newValue: e.target.value },
+              })
+            }
+          />
           <button
             id="submit-button"
             onClick={() => {
-              dispatch({ type: actionTypes.saveAddress });
+              if (!isSaveButtonDisabled(state)) {
+                dispatch({ type: actionTypes.saveAddress });
+              } else {
+                setModal("Invalid", "Please fill in all address form");
+              }
             }}
           >
             {"Add address"}

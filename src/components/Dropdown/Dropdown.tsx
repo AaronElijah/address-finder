@@ -16,7 +16,7 @@ export const Dropdown = ({
   return (
     <select
       className="dropdown"
-      value={value === null ? undefined : value} // null not allowed value, use undefined
+      value={value === null ? "" : value} // null not allowed value, use empty string
       onChange={(e) => {
         handleChangeValue(e.target.value);
       }}

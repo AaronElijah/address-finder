@@ -6,7 +6,11 @@ export type Address = {
   county: string;
 };
 
-type SavedAddress = Address & {
+export type AddressWithPostcode = Address & {
+  postcode: string;
+};
+
+export type SavedAddress = AddressWithPostcode & {
   postcode: string;
   years: number;
   months: number;
@@ -27,7 +31,9 @@ export enum actionTypes {
   updatePostcode = "update/postcode",
   setAddresses = "set/addresses",
   setChosenAddress = "set/chosenaddress",
+  updateChosenAddress = "update/chosenaddress",
   saveAddress = "save/address",
+  deleteAddress = "delete/address",
 }
 
 export interface UpdateYearsAction {
@@ -54,8 +60,17 @@ export interface SetChosenAddressAction {
   payload: { addressOption: string };
 }
 
+export interface UpdateChosenAddressAction {
+  type: actionTypes.updateChosenAddress;
+  payload: Record<string, string>;
+}
+
 export interface SaveAddressAction {
   type: actionTypes.saveAddress;
+}
+
+export interface DeleteAddressAction {
+  type: actionTypes.deleteAddress;
 }
 
 type AddressFormActionType =
@@ -64,7 +79,9 @@ type AddressFormActionType =
   | UpdatePostcodeAction
   | SetAddressesAction
   | SetChosenAddressAction
-  | SaveAddressAction;
+  | UpdateChosenAddressAction
+  | SaveAddressAction
+  | DeleteAddressAction;
 
 export const reducer = (
   state: AddressFormStateType,
@@ -91,6 +108,23 @@ export const reducer = (
           county: addressParts[4],
         },
       };
+    case actionTypes.updateChosenAddress:
+      const { postcode, ...otherAddress } = action.payload;
+      const newPostcode = postcode !== undefined ? postcode : state.postcode;
+      const definedNewAddress: any = Object.keys(otherAddress).reduce(
+        (newAddress: Record<string, string>, key) => {
+          if (otherAddress[key] !== undefined) {
+            newAddress[key] = otherAddress[key];
+          }
+          return newAddress;
+        },
+        {}
+      );
+      return {
+        ...state,
+        chosenAddress: { ...state.chosenAddress, ...definedNewAddress },
+        postcode: newPostcode,
+      };
     case actionTypes.saveAddress:
       return {
         ...state,
@@ -110,6 +144,8 @@ export const reducer = (
           county: state.chosenAddress?.county as string,
         },
       };
+    case actionTypes.deleteAddress:
+      return { ...state, savedAddress: null };
     default:
       return state;
   }

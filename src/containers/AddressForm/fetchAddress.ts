@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const apiKey = "eKtESYz-3UWLEdxChO2gHw22427"; // refactor into env. var.
+const apiKey = "eKtESYz-3UWLEdxChO2gHw22427"; // for convenience, added here as constant - in prod, would refactor into env. var.
 
 export const fetchAddress = async (
   postcode: string,

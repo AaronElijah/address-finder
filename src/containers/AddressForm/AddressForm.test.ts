@@ -1,5 +1,9 @@
-import { getAddressArray, getAddressOptions } from "./AddressForm";
-import { Address } from "./reducer";
+import {
+  getAddressArray,
+  getAddressDisplay,
+  getAddressOptions,
+} from "./AddressForm";
+import { Address, SavedAddress } from "./reducer";
 
 test("parse address array to string", () => {
   const addresses = [
@@ -35,4 +39,20 @@ test("parse address object into address array", () => {
     "test city",
     "test county",
   ]);
+});
+
+test("parse saved address as address display label", () => {
+  const savedAddress: SavedAddress = {
+    line1: "1 test lane",
+    line2: "test street",
+    line3: "test area",
+    city: "test city",
+    county: "test county",
+    years: 2,
+    months: 11,
+    postcode: "abc123",
+  };
+  expect(getAddressDisplay(savedAddress)).toEqual(
+    "1 test lane, test street, test city, abc123"
+  );
 });
